@@ -6,9 +6,9 @@
     <title>Ragnarok Online Stat Calculator</title>
     <link rel="manifest" href="manifest.json">
 
-    <!-- AdMob script -->
+    <!-- AdSense / AdMob script -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1053943353456930"
-    crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script>
     
     <style>
         body {
@@ -29,8 +29,6 @@
             border-bottom: 2px solid #f28500;
             padding-bottom: 10px;
         }
-
-        /* --- REPLACED .stat-grid BLOCK (exactly as requested) --- */
         .stat-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -40,145 +38,43 @@
             padding: 20px;
             border-radius: 8px;
         }
-
-        .stat-input {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-        .stat-input label {
-            font-weight: 600;
-            color: #6495ed;
-            font-size: 0.9rem;
-        }
+        .stat-input { display: flex; flex-direction: column; gap: 5px; }
+        .stat-input label { font-weight: 600; color: #6495ed; font-size: 0.9rem; }
         .stat-input input {
-            padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            font-size: 1rem;
-            width: 100%;
-            box-sizing: border-box;
-            background: white;
-            transition: none;
+            padding: 10px; border: 2px solid #ddd; border-radius: 6px;
+            font-size: 1rem; width: 100%; box-sizing: border-box;
+            background: white; transition: none;
         }
-        .stat-input input:focus {
-            border-color: #6495ed;
-            outline: none;
-        }
-        .stat-input input::placeholder {
-            color: #aaa;
-            font-style: italic;
-        }
+        .stat-input input:focus { border-color: #6495ed; outline: none; }
+        .stat-input input::placeholder { color: #aaa; font-style: italic; }
         .controls {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin: 25px 0;
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
+            display: flex; gap: 20px; flex-wrap: wrap; margin: 25px 0;
+            background: #f8f9fa; padding: 20px; border-radius: 8px;
             align-items: flex-end;
         }
-        .control-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            min-width: 280px;
-        }
-        .control-group label {
-            font-weight: 600;
-            color: #6495ed;
-            font-size: 0.9rem;
-        }
-        select, button {
-            padding: 10px 15px;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            font-size: 1rem;
-            box-sizing: border-box;
-            height: 42px;
-        }
-        select {
-            width: 100%;
-        }
-        select:focus {
-            border-color: #6495ed;
-            outline: none;
-        }
-        button {
-            background: #c6d7f0;
-            color: #333;
-            font-weight: bold;
-            border: 2px solid #ddd;
-            cursor: pointer;
-            min-width: 120px;
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .stat-item {
-            background: #f8f9fa;
-            padding: 10px 15px;
-            border-radius: 6px;
-            font-family: monospace;
-            font-size: 1rem;
-            border-left: 4px solid #6495ed;
-            border: 1px solid #ddd;
-            border-left-width: 4px;
-        }
-        .summary {
-            margin-top: 20px;
-            font-weight: bold;
-            color: #6495ed;
-        }
-        .error {
-            color: #c00;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-
-        /* --- NEW RESPONSIVE RULES (exactly as requested) --- */
-        @media (max-width: 600px) {
-            body { margin: 15px; }
-            h1 { font-size: 22px; }
-            .controls { flex-direction: column; }
-            button { width: 100%; }
-        }
+        .control-group { display: flex; flex-direction: column; gap: 8px; min-width: 280px; }
+        .control-group label { font-weight: 600; color: #6495ed; font-size: 0.9rem; }
+        select, button { padding: 10px 15px; border: 2px solid #ddd; border-radius: 6px; font-size: 1rem; box-sizing: border-box; height: 42px; }
+        select { width: 100%; } select:focus { border-color: #6495ed; outline: none; }
+        button { background: #c6d7f0; color: #333; font-weight: bold; border: 2px solid #ddd; cursor: pointer; min-width: 120px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin-top: 20px; }
+        .stat-item { background: #f8f9fa; padding: 10px 15px; border-radius: 6px; font-family: monospace; font-size: 1rem; border-left: 4px solid #6495ed; border: 1px solid #ddd; border-left-width: 4px; }
+        .summary { margin-top: 20px; font-weight: bold; color: #6495ed; }
+        .error { color: #c00; font-weight: bold; margin: 10px 0; }
+        @media (max-width: 600px) { body { margin: 15px; } h1 { font-size: 22px; } .controls { flex-direction: column; } button { width: 100%; } }
     </style>
 </head>
 <body>
 <div class="container">
     <h1>Ragnarok Online Stat Calculator</h1>
 
-    <!-- stat grid uses the updated auto-fit / minmax(120px) style -->
     <div class="stat-grid">
-        <div class="stat-input">
-            <label>STR</label>
-            <input type="number" id="str" min="1" max="99" placeholder="Empty for Auto" autocomplete="off">
-        </div>
-        <div class="stat-input">
-            <label>AGI</label>
-            <input type="number" id="agi" min="1" max="99" placeholder="Empty for Auto" autocomplete="off">
-        </div>
-        <div class="stat-input">
-            <label>VIT</label>
-            <input type="number" id="vit" min="1" max="99" placeholder="Empty for Auto" autocomplete="off">
-        </div>
-        <div class="stat-input">
-            <label>INT</label>
-            <input type="number" id="int" min="1" max="99" placeholder="Empty for Auto" autocomplete="off">
-        </div>
-        <div class="stat-input">
-            <label>DEX</label>
-            <input type="number" id="dex" min="1" max="99" placeholder="Empty for Auto" autocomplete="off">
-        </div>
-        <div class="stat-input">
-            <label>LUK</label>
-            <input type="number" id="luk" min="1" max="99" placeholder="Empty for Auto" autocomplete="off">
-        </div>
+        <div class="stat-input"><label>STR</label><input type="number" id="str" min="1" max="99" placeholder="Empty for Auto" autocomplete="off"></div>
+        <div class="stat-input"><label>AGI</label><input type="number" id="agi" min="1" max="99" placeholder="Empty for Auto" autocomplete="off"></div>
+        <div class="stat-input"><label>VIT</label><input type="number" id="vit" min="1" max="99" placeholder="Empty for Auto" autocomplete="off"></div>
+        <div class="stat-input"><label>INT</label><input type="number" id="int" min="1" max="99" placeholder="Empty for Auto" autocomplete="off"></div>
+        <div class="stat-input"><label>DEX</label><input type="number" id="dex" min="1" max="99" placeholder="Empty for Auto" autocomplete="off"></div>
+        <div class="stat-input"><label>LUK</label><input type="number" id="luk" min="1" max="99" placeholder="Empty for Auto" autocomplete="off"></div>
     </div>
 
     <div class="controls">
@@ -199,7 +95,7 @@
     </div>
 </div>
 
-    <!-- Banner Ad -->
+<!-- ✅ Test Banner Ad at Bottom -->
 <div style="text-align:center; margin-top:20px;">
   <ins class="adsbygoogle"
        style="display:block"
@@ -207,7 +103,6 @@
        data-ad-slot="1234567890"
        data-ad-format="auto"
        data-full-width-responsive="true"></ins>
-
   <script>
        (adsbygoogle = window.adsbygoogle || []).push({});
   </script>
@@ -215,203 +110,71 @@
 
 <script>
 (function() {
-    // Cost table (stat → cost from 1)
     const costMap = new Map();
-    
-    // Build cost map programmatically
-    function buildCostMap() {
-        let cost = 0;
-        for (let stat = 1; stat <= 99; stat++) {
-            if (stat > 1) {
-                let increment;
-                if (stat <= 11) increment = 2;
-                else if (stat <= 21) increment = 3;
-                else if (stat <= 31) increment = 4;
-                else if (stat <= 41) increment = 5;
-                else if (stat <= 51) increment = 6;
-                else if (stat <= 61) increment = 7;
-                else if (stat <= 71) increment = 8;
-                else if (stat <= 81) increment = 9;
-                else if (stat <= 91) increment = 10;
-                else increment = 11;
-                cost += increment;
-            }
-            costMap.set(stat, cost);
+    for (let stat = 1, cost = 0; stat <= 99; stat++) {
+        if (stat > 1) {
+            let inc = (stat<=11?2:stat<=21?3:stat<=31?4:stat<=41?5:stat<=51?6:stat<=61?7:stat<=71?8:stat<=81?9:stat<=91?10:11);
+            cost += inc;
         }
+        costMap.set(stat, cost);
     }
-    buildCostMap();
-
-    // Reverse mapping: cost → stat
     const reverseCost = new Map();
-    for (let [stat, c] of costMap) {
-        reverseCost.set(c, stat);
-    }
+    for (let [stat,c] of costMap) reverseCost.set(c, stat);
     const validCosts = Array.from(reverseCost.keys()).sort((a,b)=>a-b);
+    const statNames = ['STR','AGI','VIT','INT','DEX','LUK'];
 
-    // Stat names
-    const statNames = ['STR', 'AGI', 'VIT', 'INT', 'DEX', 'LUK'];
+    function generateCombinations(fixedStats,totalPoints) {
+        const fixedCosts=[], fixedIndices=[], results=[], flexCostCombos=[], fixedTotalCost=0;
+        let totalFixed=0;
+        let remaining=totalPoints;
+        let flexCount=0;
+        for(let i=0;i<6;i++){ if(fixedStats[i]!==null){ totalFixed+=costMap.get(fixedStats[i]); } }
+        remaining-=totalFixed; flexCount=fixedStats.filter(v=>v===null).length;
 
-    // Generate all valid combinations
-    function generateCombinations(fixedStats, totalPoints) {
-        const fixedIndices = [];
-        const fixedCosts = [];
-        let fixedTotalCost = 0;
-
-        for (let i = 0; i < 6; i++) {
-            if (fixedStats[i] !== null) {
-                const stat = fixedStats[i];
-                if (!costMap.has(stat)) {
-                    throw new Error(`Invalid value at ${statNames[i]}: ${stat} (must be 1-99)`);
-                }
-                const cost = costMap.get(stat);
-                fixedIndices.push(i);
-                fixedCosts.push({ index: i, stat: stat, cost: cost });
-                fixedTotalCost += cost;
+        function findCombos(start,combo,sum,depth,maxDepth){
+            if(depth===maxDepth){ if(sum===remaining) flexCostCombos.push([...combo]); return; }
+            for(let i=start;i<validCosts.length;i++){ 
+                let cost=validCosts[i];
+                if(sum+cost>remaining) break;
+                combo.push(cost); findCombos(i,combo,sum+cost,depth+1,maxDepth); combo.pop();
             }
         }
+        findCombos(0,[],0,0,flexCount);
 
-        const fixedCount = fixedIndices.length;
-        const flexCount = 6 - fixedCount;
-        let remaining = totalPoints - fixedTotalCost;
-        if (remaining < 0) throw new Error("Total points too low for fixed stats");
-
-        if (flexCount === 0) {
-            if (remaining === 0) {
-                const result = new Array(6);
-                fixedCosts.forEach(f => { result[f.index] = f.stat; });
-                return [result];
-            } else {
-                return [];
-            }
-        }
-
-        const flexCostCombos = [];
-
-        function findCombos(startIdx, currentCombo, currentSum, depth, maxDepth) {
-            if (depth === maxDepth) {
-                if (currentSum === remaining) {
-                    flexCostCombos.push([...currentCombo]);
-                }
-                return;
-            }
-            
-            const minPossible = validCosts[startIdx] * (maxDepth - depth);
-            const maxPossible = validCosts[validCosts.length-1] * (maxDepth - depth);
-            if (currentSum + minPossible > remaining) return;
-            if (currentSum + maxPossible < remaining) return;
-
-            for (let i = startIdx; i < validCosts.length; i++) {
-                const cost = validCosts[i];
-                if (currentSum + cost > remaining) break;
-                currentCombo.push(cost);
-                findCombos(i, currentCombo, currentSum + cost, depth + 1, maxDepth);
-                currentCombo.pop();
-            }
-        }
-
-        findCombos(0, [], 0, 0, flexCount);
-
-        const results = [];
-
-        for (let costCombo of flexCostCombos) {
-            const flexStats = costCombo.map(c => reverseCost.get(c));
-            const sortedFlexStats = [...flexStats].sort((a,b)=>a-b);
-            
-            const result = new Array(6);
-            fixedCosts.forEach(f => { result[f.index] = f.stat; });
-            
-            const flexibleIndices = [];
-            for (let i = 0; i < 6; i++) {
-                if (fixedStats[i] === null) flexibleIndices.push(i);
-            }
-            
-            for (let j = 0; j < sortedFlexStats.length; j++) {
-                result[flexibleIndices[j]] = sortedFlexStats[j];
-            }
-            
-            results.push(result);
-        }
-
-        const unique = new Set();
-        const final = [];
-        for (let combo of results) {
-            const key = combo.join(',');
-            if (!unique.has(key)) {
-                unique.add(key);
-                final.push(combo);
-            }
-        }
-        return final;
+        flexCostCombos.forEach(costCombo=>{
+            const flexStats=costCombo.map(c=>reverseCost.get(c)).sort((a,b)=>a-b);
+            const result=new Array(6); let flexIdx=0;
+            for(let i=0;i<6;i++){ result[i]=fixedStats[i]!==null?fixedStats[i]:flexStats[flexIdx++]; }
+            const key=result.join(',');
+            if(!results.some(r=>r.join(',')===key)) results.push(result);
+        });
+        return results;
     }
 
-    function displayResults(combos) {
-        const container = document.getElementById('combinations');
-        const summary = document.getElementById('summary');
-        const errorMsg = document.getElementById('errorMsg');
-        container.innerHTML = '';
-        errorMsg.innerText = '';
-
-        if (combos.length === 0) {
-            summary.innerText = 'No valid combinations found.';
-            return;
-        }
-
-        summary.innerText = `Found ${combos.length} combination${combos.length>1?'s':''}:`;
-
-        combos.forEach(combo => {
-            const div = document.createElement('div');
-            div.className = 'stat-item';
-            const display = statNames.map((name, idx) => `${name} ${combo[idx]}`).join(' · ');
-            div.innerText = display;
+    function displayResults(combos){
+        const container=document.getElementById('combinations');
+        const summary=document.getElementById('summary');
+        const errorMsg=document.getElementById('errorMsg');
+        container.innerHTML=''; errorMsg.innerText='';
+        if(combos.length===0){ summary.innerText='No valid combinations found.'; return; }
+        summary.innerText=`Found ${combos.length} combination${combos.length>1?'s':''}:`;
+        combos.forEach(combo=>{
+            const div=document.createElement('div');
+            div.className='stat-item';
+            div.innerText=statNames.map((n,i)=>`${n} ${combo[i]}`).join(' · ');
             container.appendChild(div);
         });
     }
 
-    document.getElementById('generateBtn').addEventListener('click', () => {
-        const str = document.getElementById('str').value;
-        const agi = document.getElementById('agi').value;
-        const vit = document.getElementById('vit').value;
-        const int = document.getElementById('int').value;
-        const dex = document.getElementById('dex').value;
-        const luk = document.getElementById('luk').value;
-
-        const fixedStats = [
-            str === '' ? null : parseInt(str, 10),
-            agi === '' ? null : parseInt(agi, 10),
-            vit === '' ? null : parseInt(vit, 10),
-            int === '' ? null : parseInt(int, 10),
-            dex === '' ? null : parseInt(dex, 10),
-            luk === '' ? null : parseInt(luk, 10)
-        ];
-
-        for (let i = 0; i < 6; i++) {
-            if (fixedStats[i] !== null && (fixedStats[i] < 1 || fixedStats[i] > 99)) {
-                document.getElementById('errorMsg').innerText = `${statNames[i]} must be between 1 and 99.`;
-                return;
-            }
-        }
-
-        const totalPoints = parseInt(document.getElementById('totalPoints').value, 10);
-        const errorMsg = document.getElementById('errorMsg');
-        errorMsg.innerText = '';
-
-        try {
-            const combos = generateCombinations(fixedStats, totalPoints);
-            displayResults(combos);
-        } catch (e) {
-            errorMsg.innerText = e.message;
-        }
+    document.getElementById('generateBtn').addEventListener('click',()=>{
+        const vals=['str','agi','vit','int','dex','luk'].map(id=>{
+            const v=document.getElementById(id).value; return v===''?null:parseInt(v,10);
+        });
+        const totalPoints=parseInt(document.getElementById('totalPoints').value,10);
+        displayResults(generateCombinations(vals,totalPoints));
     });
 
-    // Clear autocomplete on page load
-    window.onload = function() {
-        document.getElementById('str').value = '';
-        document.getElementById('agi').value = '';
-        document.getElementById('vit').value = '';
-        document.getElementById('int').value = '';
-        document.getElementById('dex').value = '';
-        document.getElementById('luk').value = '';
-    };
+    window.onload=function(){ ['str','agi','vit','int','dex','luk'].forEach(id=>document.getElementById(id).value=''); };
 })();
 </script>
 </body>
