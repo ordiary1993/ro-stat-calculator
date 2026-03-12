@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ragnarok Online Stat Calculator · refined</title>
+    <title>Ragnarok Online Stat Calculator</title>
     
-    <!-- Google AdSense/AdMob SDK - Using your App ID -->
+    <!-- Google AdMob SDK -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1053943353456930"
             crossorigin="anonymous"></script>
     
@@ -63,15 +63,16 @@
             width: 100%;
             box-sizing: border-box;
             background: white;
-            transition: none;
+        }
+        /* Smaller placeholder text */
+        .stat-input input::placeholder {
+            color: #aaa;
+            font-style: italic;
+            font-size: 0.8rem; /* Reduced from default */
         }
         .stat-input input:focus {
             border-color: #6495ed;
             outline: none;
-        }
-        .stat-input input::placeholder {
-            color: #aaa;
-            font-style: italic;
         }
         .controls {
             display: flex;
@@ -104,10 +105,6 @@
         }
         select {
             width: 100%;
-        }
-        select:focus {
-            border-color: #6495ed;
-            outline: none;
         }
         button {
             background: #c6d7f0;
@@ -147,7 +144,7 @@
             margin: 10px 0;
         }
 
-        /* Banner ad styles - Following Google's guidelines */
+        /* Banner ad styles */
         .ad-container {
             max-width: 1000px;
             margin: 20px auto 0;
@@ -174,10 +171,8 @@
             font-size: 0.7rem;
             text-transform: uppercase;
             margin-bottom: 8px;
-            letter-spacing: 0.5px;
         }
         
-        /* Your specific banner ad - 320x100 as requested */
         .adsbygoogle {
             display: inline-block;
             width: 320px;
@@ -186,19 +181,47 @@
             border-radius: 4px;
         }
 
+        /* Loading overlay - cleaner now */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .loading-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #fff;
+            border-top-color: #6495ed;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         @media (max-width: 600px) {
             body { margin: 15px; }
             h1 { font-size: 22px; }
             .controls { flex-direction: column; }
             button { width: 100%; }
             .ad-container { padding: 0 15px; }
-            .adsbygoogle {
-                width: 300px; /* Slightly smaller on mobile */
-                height: 100px;
-            }
+            .adsbygoogle { width: 300px; height: 100px; }
         }
 
-        /* Privacy policy link - Required by AdMob */
         .privacy-footer {
             text-align: center;
             margin-top: 15px;
@@ -210,16 +233,12 @@
             color: #6495ed;
             text-decoration: none;
         }
-        .privacy-footer a:hover {
-            text-decoration: underline;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Ragnarok Online Stat Calculator</h1>
 
-        <!-- Calculator UI -->
         <div class="stat-grid">
             <div class="stat-input">
                 <label>STR</label>
@@ -258,7 +277,6 @@
             <button id="generateBtn">Generate</button>
         </div>
 
-        <!-- Results Section -->
         <div id="results">
             <div class="summary" id="summary"></div>
             <div id="errorMsg" class="error"></div>
@@ -266,24 +284,27 @@
         </div>
     </div>
 
-    <!-- Bottom Banner Ad - Using your Ad Unit ID -->
+    <!-- Bottom Banner Ad -->
     <div class="ad-container">
         <div class="ad-label">Advertisement</div>
         <div class="ad-banner">
-            <!-- Your banner ad unit: ca-app-pub-1053943353456930/7687379014 -->
             <ins class="adsbygoogle"
                  style="display:inline-block;width:320px;height:100px"
                  data-ad-client="ca-pub-1053943353456930"
                  data-ad-slot="7687379014"
-                 data-ad-format="rectangle"
-                 data-full-width-responsive="false"></ins>
+                 data-ad-format="rectangle"></ins>
             <script>
                  (adsbygoogle = window.adsbygoogle || []).push({});
             </script>
         </div>
     </div>
 
-    <!-- Privacy Policy Link - Required by AdMob -->
+    <!-- Simple loading overlay - no text, just spinner -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Privacy Policy Link -->
     <div class="privacy-footer">
         <a href="#" id="privacyLink">Privacy Policy</a> | 
         <a href="#" id="termsLink">Terms of Service</a>
@@ -291,10 +312,12 @@
 
     <script>
     (function() {
-        // Cost table (stat → cost from 1)
+        // =============================================
+        // STAT CALCULATION CODE
+        // =============================================
+        
         const costMap = new Map();
         
-        // Build cost map programmatically
         function buildCostMap() {
             let cost = 0;
             for (let stat = 1; stat <= 99; stat++) {
@@ -317,17 +340,13 @@
         }
         buildCostMap();
 
-        // Reverse mapping: cost → stat
         const reverseCost = new Map();
         for (let [stat, c] of costMap) {
             reverseCost.set(c, stat);
         }
         const validCosts = Array.from(reverseCost.keys()).sort((a,b)=>a-b);
-
-        // Stat names
         const statNames = ['STR', 'AGI', 'VIT', 'INT', 'DEX', 'LUK'];
 
-        // Generate all valid combinations
         function generateCombinations(fixedStats, totalPoints) {
             const fixedIndices = [];
             const fixedCosts = [];
@@ -432,7 +451,7 @@
                 return;
             }
 
-            summary.innerText = `Found ${combos.length} combination${combos.length>1?'s':''}:`;
+            summary.innerText = `Found ${combos.length} combination${combos.length>1?'s':''}`;
 
             combos.forEach(combo => {
                 const div = document.createElement('div');
@@ -443,7 +462,90 @@
             });
         }
 
-        document.getElementById('generateBtn').addEventListener('click', () => {
+        // =============================================
+        // SIMPLE INTERSTITIAL AD CODE
+        // =============================================
+        
+        let calculationCounter = 0;
+        let isAdShowing = false;
+        let loadingTimeout = null;
+        
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        
+        function setLoading(show) {
+            if (show) {
+                loadingOverlay.classList.add('active');
+                // Safety timeout: auto-hide after 8 seconds
+                loadingTimeout = setTimeout(() => {
+                    if (isAdShowing) {
+                        console.log('Ad timeout - auto hiding');
+                        setLoading(false);
+                        isAdShowing = false;
+                        performCalculation();
+                    }
+                }, 8000);
+            } else {
+                loadingOverlay.classList.remove('active');
+                if (loadingTimeout) {
+                    clearTimeout(loadingTimeout);
+                    loadingTimeout = null;
+                }
+            }
+        }
+        
+        function showInterstitialAd() {
+            return new Promise((resolve) => {
+                if (isAdShowing) {
+                    resolve();
+                    return;
+                }
+                
+                isAdShowing = true;
+                setLoading(true);
+                
+                try {
+                    const adBreakObj = {
+                        type: 'interstitial',
+                        name: 'ad_' + Date.now(),
+                        
+                        afterAd: () => {
+                            setLoading(false);
+                            isAdShowing = false;
+                            resolve();
+                        },
+                        
+                        adBreakDone: (placementInfo) => {
+                            if (isAdShowing) {
+                                setLoading(false);
+                                isAdShowing = false;
+                                resolve();
+                            }
+                        },
+                        
+                        adDismissed: () => {
+                            setLoading(false);
+                            isAdShowing = false;
+                            resolve();
+                        },
+                        
+                        adError: () => {
+                            setLoading(false);
+                            isAdShowing = false;
+                            resolve();
+                        }
+                    };
+                    
+                    (adsbygoogle = window.adsbygoogle || []).push(adBreakObj);
+                    
+                } catch (error) {
+                    setLoading(false);
+                    isAdShowing = false;
+                    resolve();
+                }
+            });
+        }
+        
+        function performCalculation() {
             const str = document.getElementById('str').value;
             const agi = document.getElementById('agi').value;
             const vit = document.getElementById('vit').value;
@@ -477,9 +579,27 @@
             } catch (e) {
                 errorMsg.innerText = e.message;
             }
+        }
+        
+        // =============================================
+        // CLICK HANDLER
+        // =============================================
+        
+        document.getElementById('generateBtn').addEventListener('click', function() {
+            // Increment counter silently
+            calculationCounter++;
+            
+            // Show interstitial every 10th calculation
+            if (calculationCounter % 10 === 0) {
+                showInterstitialAd().then(() => {
+                    performCalculation();
+                });
+            } else {
+                performCalculation();
+            }
         });
 
-        // Clear inputs on page load
+        // Initialize on page load
         window.onload = function() {
             document.getElementById('str').value = '';
             document.getElementById('agi').value = '';
@@ -487,10 +607,9 @@
             document.getElementById('int').value = '';
             document.getElementById('dex').value = '';
             document.getElementById('luk').value = '';
+            calculationCounter = 0;
+            setLoading(false);
         };
-
-        // Initialize ads (required by AdMob)
-        (adsbygoogle = window.adsbygoogle || []).push({});
     })();
     </script>
 </body>
